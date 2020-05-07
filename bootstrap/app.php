@@ -23,9 +23,20 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app = new \Dusterio\LumenPassport\Lumen7Application(
+    dirname(__DIR__)
+);
 
-// $app->withEloquent();
+$app->configure('auth');
+
+$app->withFacades();
+
+$app->withEloquent();
+
+// Enable auth middleware (shipped with Lumen)
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -91,9 +102,13 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+\Dusterio\LumenPassport\LumenPassport::routes($app);
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +125,12 @@ $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
+
+    # route admin
+    include __DIR__.'/../app/Http/Controllers/Admin/Routes/web.php';
+    
+    # route cd
+    include __DIR__.'/../app/Http/Controllers/Cd/Routes/web.php';
 });
 
 return $app;

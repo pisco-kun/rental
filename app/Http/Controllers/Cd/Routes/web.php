@@ -11,14 +11,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
-	$router->post('/register', 'ExampleController@register');
-	$router->post('/login', 'ExampleController@login');
-
-	$router->group(['prefix' => 'rental', 'middleware' => 'auth'], function () use ($router) {
-		$router->get('/', 'ExampleController@rental');
-
+	# this route for admin
+	$router->group(['prefix' => 'cd', 'middleware' => 'auth:admin'], function () use ($router) {
+		$router->get('/', 'Cd\CdController@index');
+		$router->post('save', 'Cd\CdController@saveData');
 	});

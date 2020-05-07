@@ -10,15 +10,8 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+	$router->post('admin/login', 'Admin\AdminController@login');
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
-	$router->post('/register', 'ExampleController@register');
-	$router->post('/login', 'ExampleController@login');
-
-	$router->group(['prefix' => 'rental', 'middleware' => 'auth'], function () use ($router) {
-		$router->get('/', 'ExampleController@rental');
-
+	$router->group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () use ($router) {
+		$router->get('logout', 'Admin\AdminController@logout');
 	});
