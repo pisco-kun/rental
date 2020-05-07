@@ -13,6 +13,9 @@
 
 	# this route for admin
 	$router->group(['prefix' => 'cd', 'middleware' => 'auth:admin'], function () use ($router) {
-		$router->get('/', 'Cd\CdController@index');
-		$router->post('save', 'Cd\CdController@saveData');
+		$router->get('/', 'Cd\CdController@index'); # listing
+		$router->post('save', 'Cd\CdController@saveData'); #save data
+		$router->get('/edit/{uuid}', 'Cd\CdController@editData'); # edit data
+		$router->put('update/{uuid}', 'Cd\CdController@updateData'); # update data
+		$router->delete('delete/{uuid}', 'Cd\CdController@deleteData'); # delete data
 	});

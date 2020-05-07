@@ -24,7 +24,7 @@ class Cd extends Migration
           $table->integer('modified_by')->nullable();
           $table->dateTime('date_created')->nullable();
           $table->dateTime('date_modified')->nullable();
-          $table->integer('deleted')->default('0');
+          $table->tinyInteger('deleted')->index()->unsigned()->default('0')->nullable()->comment('0 => Not Deleted, 1=> Deleted'); 
         });
     }
 
@@ -35,6 +35,6 @@ class Cd extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin');
+        Schema::dropIfExists('cd');
     }
 }

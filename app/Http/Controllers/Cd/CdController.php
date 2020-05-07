@@ -99,4 +99,139 @@ class CdController extends Controller
       return response()->json($result, $result['status']);     
     }
   }
+
+  public function editData(request $request, $uuid='')
+  {
+    # Define Helper
+    $sys_api      = new sys_api();
+
+    $result = array();
+    $input = $request->all();
+
+    try {
+      $data = $sys_api->edit_data($uuid);
+
+      if ($data['deleted'] == '1') 
+      {
+        $result = [
+          'status' => 400,
+          'message' => 'data has been deleted'
+        ];
+      }
+      else
+      {
+        $result = [
+          'status' => 200,
+          'message' => 'Success',
+          'result' => $data
+        ];        
+      }
+
+    } catch (Exception $e) {
+      $result = [
+        'status' => 500,
+        'message' => 'Something went wrong!',
+      ];
+    }
+
+    return response()->json($result, $result['status']);
+  }
+
+  public function updateData(Request $request, $uuid='')
+  {
+    # Define Helper
+    $sys_api      = new sys_api();
+
+    $result = array();
+    $input = $request->all();
+    $admin = auth('admin')->user();
+    $admin = json_decode(json_encode($admin), true);
+
+    try {
+      if (empty($uuid)) 
+      {
+        $result = [
+          'status' => 400,
+          'message' => 'Parameter Invalid'
+        ];
+
+        return response()->json($result, $result['status']);
+      }
+
+      $check_data = $sys_api->edit_data($uuid);
+
+      if ($check_data['deleted'] == '1') 
+      {
+        $result = [
+          'status' => 400,
+          'message' => 'data has been deleted'
+        ];
+      }
+      else
+      {
+        $process_update = $sys_api->update($input, $uuid, $admin['admin_serial_id']);
+        $result = [
+          'status' => 200,
+          'message' => 'Update successfully',
+        ];        
+      }
+
+    } catch (Exception $e) {
+      $result = [
+        'status' => 500,
+        'message' => 'Something went wrong!',
+      ];
+    }
+
+    return response()->json($result, $result['status']);
+  }
+
+  public function deleteData(Request $request, $uuid='')
+  {
+    # Define Helper
+    $sys_api      = new sys_api();
+
+    $result = array();
+    $input = $request->all();
+    $admin = auth('admin')->user();
+    $admin = json_decode(json_encode($admin), true);
+
+    try {
+      if (empty($uuid)) 
+      {
+        $result = [
+          'status' => 400,
+          'message' => 'Parameter Invalid'
+        ];
+
+        return response()->json($result, $result['status']);
+      }
+
+      $check_data = $sys_api->edit_data($uuid);
+
+      if ($check_data['deleted'] == '1') 
+      {
+        $result = [
+          'status' => 400,
+          'message' => 'data has been deleted'
+        ];
+      }
+      else
+      {
+        $process_update = $sys_api->delete($uuid, $admin['admin_serial_id']);
+        $result = [
+          'status' => 200,
+          'message' => 'Delete successfully',
+        ];        
+      }
+
+    } catch (Exception $e) {
+      $result = [
+        'status' => 500,
+        'message' => 'Something went wrong!',
+      ];
+    }
+
+    return response()->json($result, $result['status']);
+  }
 }

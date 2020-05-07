@@ -92,4 +92,47 @@ class Helper
 		return $result;
 	}
 
+	public function edit_data($uuid='')
+	{
+		$result = array();
+
+		$query = $this->model_class::where($this->table_module.'_uuid', '=', $uuid)
+									->first();
+
+		if (@count($query) > 0) 
+		{
+			$result = $query->toArray();
+		}
+
+		return $result;
+	}
+
+	public function update($input=array(), $uuid='', $admin_id=0)
+	{
+		if (isset($input[$this->table_module.'_rate'])) 
+		{
+			$input[$this->table_module.'_rate'] = str_replace('.', '', $input[$this->table_module.'_rate']);
+		}
+
+		$input['date_modified'] = date('Y-m-d H:i:s');
+		$input['modified_by']	= $admin_id;
+
+		$process = $this->model_class::where($this->table_module.'_uuid', '=', $uuid)
+										->update($input);
+
+		return true;
+	}
+
+	public function delete($uuid='', $admin_id=0)
+	{
+		$input['date_modified'] = date('Y-m-d H:i:s');
+		$input['modified_by']	= $admin_id;
+		$input['deleted']	= 1;
+
+		$process = $this->model_class::where($this->table_module.'_uuid', '=', $uuid)
+										->update($input);
+
+		return true;
+	}
+
 }
