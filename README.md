@@ -38,8 +38,13 @@ CACHE_DRIVER=array
 QUEUE_DRIVER=array
 DB_STRICT_MODE=false
 
+- composer dump-autoload
 - php artisan migrate
 - php artisan db:seed
 - php artisan passport:install
+
+# API Documentation
+- Base route http://localhost/rental -> check version lumen
+- checkit out https://drive.google.com/file/d/1_eVflwB9Y3kkQfOBIAbQqyAgi2_ljNdT/view?usp=sharing
 
 
