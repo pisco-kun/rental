@@ -241,9 +241,9 @@ class Helper
 		$uuid = isset($input['orders_detail_uuid']) ? $input['orders_detail_uuid'] : '';
 
 		# trugger date end dummy
-		$date_now = '2020-05-12 17:00';
+		# $date_now = '2020-05-12 17:00';
 
-		// $date_now = date('Y-m-d H:i:s');
+		$date_now = date('Y-m-d H:i:s');
 
 		$check_detail_orders = $this->model_class_orders_detail::where('orders_detail_uuid', '=', $uuid)->first();
 
