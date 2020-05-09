@@ -13,5 +13,7 @@ class DatabaseSeeder extends Seeder
     {
     	$this->call(admin_table::class);
     	$this->call(cd_table::class);
+        $this->call(users_table::class);
+        $this->call(cd_category_table::class);
     }
 }

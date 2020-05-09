@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cd;
+namespace App\Http\Controllers\Cd_category;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -11,12 +11,12 @@ use Validator;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
-use App\Http\Controllers\Cd\Helper as sys_api;
+use App\Http\Controllers\Cd_category\Helper as sys_api;
 
-class CdController extends Controller
+class Cd_categoryController extends Controller
 {
-  var $module = 'Cd';
-  var $table_module = 'cd';
+  var $module = 'Cd_category';
+  var $table_module = 'cd_category';
   /**
    * Create a new controller instance.
    *
@@ -273,7 +273,7 @@ class CdController extends Controller
     $admin = auth('admin')->user();
     $admin = json_decode(json_encode($admin), true);
 
-    $uuid = isset($input['cd_uuid']) ? $input['cd_uuid'] : '';
+    $uuid = isset($input[$this->table_module.'_uuid']) ? $input[$this->table_module.'_uuid'] : '';
 
     try {
       if (empty($uuid)) 
@@ -380,70 +380,6 @@ class CdController extends Controller
           'message' => 'Success',
           'data'    => $data
         ];        
-      }
-
-    } catch (Exception $e) {
-      $result = [
-        'status' => 500,
-        'message' => 'Something went wrong!',
-      ];
-    }
-
-    return response()->json($result, $result['status']);
-  }
-
-  public function checkStock(Request $request)
-  {
-    # Define Helper
-    $sys_api      = new sys_api();
-
-    $result = array();
-    $input = $request->all();
-    $uuid = isset($input['cd_uuid']) ? $input['cd_uuid'] : '';
-
-    try {
-      if (empty($uuid)) 
-      {
-        $result = [
-          'status' => 400,
-          'message' => 'Parameter Invalid'
-        ];
-
-        return response()->json($result, $result['status']);
-      }
-
-      $check_data = $sys_api->edit_data($uuid);
-      
-      if (empty($check_data)) 
-      {
-        $result = [
-          'status' => 400,
-          'message' => 'Data Not Found'
-        ];
-
-        return response()->json($result, $result['status']);
-      }
-
-      if ($check_data['deleted'] == '1') 
-      {
-        $result = [
-          'status' => 400,
-          'message' => 'data has been deleted'
-        ];
-      }
-      else
-      {
-        $data = $sys_api->detailData($uuid);
-
-        if (@count($data) > 0) 
-        {
-          $result = [
-            'status' => 200,
-            'message' => 'Success',
-            'stock'    => $data['cd_quantity']
-          ];        
-        }
-        
       }
 
     } catch (Exception $e) {

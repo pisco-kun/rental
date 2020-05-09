@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cd;
+namespace App\Http\Controllers\Cd_category;
 
 use DB;
 
@@ -8,10 +8,10 @@ class Helper
 {
 	var $uuid = 'Ramsey\Uuid\Uuid';
 	var $uuid_parent = 'Ramsey\Uuid\Exception\UnsatisfiedDependencyException';
-	var $model_class = 'App\Http\Controllers\Cd\Models\Cd';
+	var $model_class = 'App\Http\Controllers\Cd_category\Models\Cd_category';
 
-	var $module = 'Cd';
-	var $table_module = 'cd';
+	var $module = 'Cd_category';
+	var $table_module = 'cd_category';
 
 	function example_uuid()
 	{
@@ -22,8 +22,7 @@ class Helper
 
 	public function save($input=array(), $admin_id=0)
 	{
-		$input['cd_uuid'] = $this->uuid::uuid4()->toString();
-    $input['cd_rate'] = str_replace('.', '', $input['cd_rate']);
+		$input[$this->table_module.'_uuid'] = $this->uuid::uuid4()->toString();
     $input['created_by'] = $admin_id;
     $input['date_created'] = date('Y-m-d H:i:s');
     $process_save = $this->model_class::create($input);
@@ -44,8 +43,8 @@ class Helper
 		$perPage 			= isset($input['limit']) ? $input['limit'] : 10;
 		$skip 				= ($page - 1) * $perPage;
 
-		$order_by = isset($input['order_by']) ? $input['order_by'] : $this->table_module.'.'.$this->table_module.'_title';
-		$type_sort = isset($input['sort']) ? $input['sort'] : 'DESC';
+		$order_by = isset($input['order_by']) ? $input['order_by'] : $this->table_module.'.'.$this->table_module.'_name';
+		$type_sort = isset($input['sort']) ? $input['sort'] : 'ASC';
 
 		$select = array(
 								$this->table_module.'.*',
@@ -148,10 +147,6 @@ class Helper
 	{
 		unset($input['uuid']);
 
-		if (isset($input['cd_rate'])) 
-		{
-			$input['cd_rate'] = str_replace('.', '', $input['cd_rate']);
-		}
 		$input['date_modified'] = date('Y-m-d H:i:s');
 		$input['modified_by']	= $admin_id;
 

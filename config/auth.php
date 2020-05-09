@@ -7,7 +7,7 @@ return [
     ],
 
     'guards' => [
-        'api' => [
+        'users' => [
             'driver' => 'passport',
             'provider' => 'users',
         ],
@@ -20,7 +20,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\User::class
+            'model' => \App\Http\Controllers\Users\Models\Users::class
         ],
         'admin' => [
             'driver' => 'eloquent',

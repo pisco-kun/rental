@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,9 +14,12 @@
 
 	# this route for admin
 	$router->group(['prefix' => 'cd', 'middleware' => 'auth:admin'], function () use ($router) {
-		$router->get('/', 'Cd\CdController@index'); # listing
 		$router->post('save', 'Cd\CdController@saveData'); #save data
 		$router->get('/edit/{uuid}', 'Cd\CdController@editData'); # edit data
 		$router->put('update/{uuid}', 'Cd\CdController@updateData'); # update data
 		$router->delete('delete/{uuid}', 'Cd\CdController@deleteData'); # delete data
+		$router->post('quick_update', 'Cd\CdController@quick_update'); # quick update data
+		$router->get('/', 'Cd\CdController@index'); # listing
+		$router->get('detail/{uuid}', 'Cd\CdController@detail'); # detail data
+		$router->post('stock', 'Cd\CdController@checkStock'); # run check stock
 	});

@@ -31,39 +31,48 @@ class AdminController extends Controller
   {
     $input = $request->all();
 
-    $model_class = 'App\Http\Controllers\Admin\Models\Admin';
+    // try {     
 
-    $data = Admin::where($this->table_module.'_email', '=', $input[$this->table_module.'_email'])
-                ->first();
+      $model_class = 'App\Http\Controllers\Admin\Models\Admin';
 
-    if (@count($data) > 0) 
-    {
-      $password = $input[$this->table_module.'_password'];
+      $data = Admin::where($this->table_module.'_email', '=', $input[$this->table_module.'_email'])
+                  ->first();
 
-      if( Hash::check($password, $data[$this->table_module.'_password']) )
+      if (@count($data) > 0) 
       {
-        $token = $data->createToken('admin')->accessToken;
-        $result = [
-          'status' => 200,
-          'message'   => 'Success',
-          'token'   => $token
-        ];
+        $password = $input[$this->table_module.'_password'];
+
+        if( Hash::check($password, $data[$this->table_module.'_password']) )
+        {
+          $token = $data->createToken('admin')->accessToken;
+          $result = [
+            'status' => 200,
+            'message'   => 'Success',
+            'token'   => $token
+          ];
+        }
+        else
+        {
+          $result = [
+            'status'  => 500,
+            'message'    => 'Wrong Password',
+          ];
+        }
       }
       else
       {
         $result = [
           'status'  => 500,
-          'message'    => 'Wrong Password',
+          'message'    => 'Email Not Found',
         ];
       }
-    }
-    else
-    {
-      $result = [
-        'status'  => 500,
-        'message'    => 'Email Not Found',
-      ];
-    }
+
+    // } catch (Exception $e) {
+    //   $result = [
+    //       'status'  => 500,
+    //       'message'    => 'Something went wrong',
+    //     ];
+    // }
 
     return response()->json($result, $result['status']);
   }
@@ -73,20 +82,54 @@ class AdminController extends Controller
     $result = auth('admin')->user()->token()->revoke();                  
     if($result)
     {
-      $response = [
+      $result = [
         'status' => 200,
         'message'    => 'logout successfully'
       ];
     }
     else
     {
-      $response = [
+      $result = [
         'satatus' => 500,
-        'message'    => 'Something is wrong'
+        'message'    => 'Something went wrong'
       ];        
     }
 
-    return response()->json($response, $response['status']);
+    return response()->json($result, $result['status']);
+  }
+
+  public function get_all(Request $request)
+  {
+    $result = array();
+    $input = $request->all();
+    
+    try {
+      $admin = auth('admin')->user();
+      $admin = json_decode(json_encode($admin), true);
+
+      $users = auth('users')->user();
+      $users = json_decode(json_encode($users), true);
+
+      if (empty($admin) AND empty($users)) 
+      {
+        return response('Unauthorized.', 401);
+      }
+
+      $data = Admin::get()->toArray();
+
+      $result = [
+        'status' => 200,
+        'message' => 'Success',
+        'data' => $data 
+      ];
+    } catch (Exception $e) {
+      $result = [
+        'satatus' => 500,
+        'message'    => 'Something went wrong'
+      ];        
+    }
+
+    return response()->json($result, $result['status']);
   }
 
 }

@@ -131,6 +131,15 @@ $app->router->group([
     
     # route cd
     include __DIR__.'/../app/Http/Controllers/Cd/Routes/web.php';
+
+    # route users
+    include __DIR__.'/../app/Http/Controllers/Users/Routes/web.php';
+
+    # route Cd_category
+    include __DIR__.'/../app/Http/Controllers/Cd_category/Routes/web.php';
+
+    # route Orders
+    include __DIR__.'/../app/Http/Controllers/Orders/Routes/web.php';
 });
 
 return $app;
